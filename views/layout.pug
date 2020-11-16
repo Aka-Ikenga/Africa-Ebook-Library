@@ -3,5 +3,30 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/stylesheets/materialize.min.css')
+
   body
     block content
+    script.
+      let fb = document.getElementById('form1');
+      fb.addEventListener('submit', event => {
+        event.preventDefault();
+
+        let elem = event.target.children[4];
+        let chips = M.Chips.getInstance(elem);
+        let genre = chips.chipsData.map(i => i.tag);
+        event.target.children[5].value = genre
+
+        event.target.submit()
+      })
+
+    // script.
+      // document.addEventListener()
+    script.
+      document.addEventListener('DOMContentLoaded', function () {
+        var elems = document.querySelectorAll('.chips');
+        var instances = M.Chips.init(elems);
+      });
+
+    script(src="/javascripts/materialize.js")
+

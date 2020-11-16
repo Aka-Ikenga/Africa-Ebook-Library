@@ -1,0 +1,17 @@
+extends layout
+
+block content
+    h5 Login to Access Database
+    div.row
+        form(action="/auth/login", method='POST', class="div col s12 l6")
+            div.row
+                div.input-field
+                    input(type='email' id="em" name="email")
+                    label(for='em') Email
+
+                div.input-field
+                    label(for='pwd') Password
+                    input(type='password' id="pwd" name="password")
+                div.col.s6
+                    input(type='submit' id='login' value='Login', class="btn")
+                a(href='/' class='btn') Back
