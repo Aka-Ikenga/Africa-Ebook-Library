@@ -2,5 +2,6 @@ bin/
 node_modules/
 .idea/
 uploads/
+Africa Ebook Library Project/
 .env
 *.env

@@ -1,6 +1,8 @@
 const fs = require('fs');
 const admin = require("firebase-admin");
 const Multer = require('multer');
+
+const Author = require('../../models/Authors')
 const Book = require('../../models/Books');
 
 const serviceAccount = require("../../config/africa-ebook-library-firebase-adminsdk-peafu-be706b8f8c");
@@ -42,9 +44,9 @@ async function create(req, res, next){
                 });
                 return meta.mediaLink;
             }
-            catch
+            catch(e)
             {
-                console.error();
+                console.error(e);
             }
 
         });
@@ -52,16 +54,33 @@ async function create(req, res, next){
         if (a && b){
             req.body.fileUrl = a.includes('cover') ? b : a;
             req.body.imageUrl = a.includes('cover') ? a: b;}
-        req.body.authors = req.body.authors.split(',');
+
+        let authors = req.body.author.split(',');
+        authors.forEach(name => name.trim())
+        req.body.author = authors;
+        // upload to authors database by adding each of the book authors to the database
+        let auth = authors.map(async name => {
+            let author = await Author.findOneAndUpdate({name: name}, {name: name}, {upsert: true});
+            // if(!author){
+            //     author = await Author.create({name: name, books: [req.body.title]})
+            //
+            // }
+            return author
+        })
+        let authIds = await Promise.all(auth.map(auth => auth._id))
+        req.body.authors = authIds
         req.body.genres = req.body.genres.split(',');
-        await Book.create(req.body);
+        let book = await Book.create(req.body);
+        authIds.forEach(async id => {
+            let auth = await Author.findByIdAndUpdate(id, {$push:{books: book.id}})
+        })
         return next();
     }
-    catch{
-        console.error();
+    catch(e){
+        console.error(e);
         return next();
     }
 
 }
 
-module.exports = {upload, create};
+module.exports = {upload, create, bucket};

@@ -24,8 +24,10 @@ html
       // document.addEventListener()
     script.
       document.addEventListener('DOMContentLoaded', function () {
-        var elems = document.querySelectorAll('.chips');
-        var instances = M.Chips.init(elems);
+        let elems = document.querySelectorAll('.chips');
+        let instances = M.Chips.init(elems);
+        let select = document.querySelectorAll('select');
+        let selectInstances = M.FormSelect.init(select);
       });
 
     script(src="/javascripts/materialize.js")

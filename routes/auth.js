@@ -4,7 +4,7 @@ const passport = require('passport');
 
 const router = express.Router();
 
-router.post('/login', passport.authenticate('local', {failureRedirect: '/auth/login', successRedirect: "/admin/upload"}))
+router.post('/login', passport.authenticate('local', {failureRedirect: '/auth/login', successRedirect: "/upload/book"}))
 
 router.get('/login', (req, res) => {
     res.render('login')

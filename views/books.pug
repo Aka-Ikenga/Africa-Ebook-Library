@@ -3,11 +3,11 @@ extends layout
 block content
   h1 File Upload
   div.row
-      form(action="/admin" method="POST" enctype="multipart/form-data" class="div col s12 l6" id="form1")
+      form(action="/upload/book" method="POST" enctype="multipart/form-data" class="div col s12 l6" id="form1")
 
         input(type="file" id="uploader" class="input-field" name='book' multiple)
         input(type="text" name="title" class="input-field" placeholder="title" autocomplete)
-        input(type="text" name="authors" placeholder="Author(s)" autocomplete)
+        input(type="text" name="author" placeholder="Author(s)" autocomplete)
         input(type="number" class="input-field" name="year" placeholder="Year Published" autocomplete)
         div.chips.input-field.chips-placeholder
         input(type='text', name='genres' class='input-field hide' autocomplete)
