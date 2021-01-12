@@ -10,19 +10,31 @@ const BookSchema = new mongoose.Schema({
     },
     year: Number,
     genres: Array,
+    branch: String,
     summary:{
         type: String,
     },
+    isbn:{
+      type: Number,
+    },
     pages: Number,
     imageUrl: String,
-    fileUrl: {
-        type: String
-    },
+    fileUrl: String,
     fileType: String,
+    ratings: {
+        type: Number,
+        default: 3
+    },
     authors: [{
         type: mongoose.Schema.Types.ObjectID,
         ref: 'Author'
-    }]
-}, {timestamps:{createdAt: 'created_at'}});
+    }],
+    review: [
+        {
+            type: mongoose.Schema.Types.ObjectID,
+            ref: 'Review'
+        }
+    ]
+}, {timestamps: true});
 
 module.exports = mongoose.model('Books', BookSchema);

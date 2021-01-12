@@ -3,11 +3,11 @@ const mongoose = require('mongoose');
 AuthorSchema = new mongoose.Schema({
     name: String,
     gender: String,
-    image: String,
     country: String,
     birthdate: Date,
     alive: Boolean,
     bio: String,
+    imageUrl: String,
     books: [
         {
             type: mongoose.Schema.Types.ObjectID,
@@ -15,6 +15,6 @@ AuthorSchema = new mongoose.Schema({
         }
     ]
 
-}, {timestamps:{createdAt: 'created_at'}});
+}, {timestamps: true});
 
 module.exports = mongoose.model('Author', AuthorSchema);

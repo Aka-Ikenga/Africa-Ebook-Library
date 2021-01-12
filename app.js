@@ -70,6 +70,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+app.post('/', (req, res) =>{
 
+})
 app.listen(PORT, console.log(`Server running in ${process.env.NODE_ENV}  mode on ${PORT}`));
 module.exports = app;

@@ -8,11 +8,11 @@ const dotenv  = require('dotenv');
 
 
 dotenv.config({path:'./config/config.env'});
-let conn = connectDB()
+connectDB()
 
 let dir = process.argv[2]
 
-async function booksUpload(dir) {
+async function authorUpload(dir) {
     try{
         let files = await fs.promises.readdir(dir)
         for await (let i of files){
@@ -22,22 +22,20 @@ async function booksUpload(dir) {
                 if(j.includes('json')){
                     let meta = path.join(dir, i, j)
                     let fo = fs.readFileSync(meta)
-                    obj = {...obj, ...JSON.parse(fo)}
-                    let authors = obj.authors.map(async name => {
-                        let author = await Author.findOneAndUpdate({name: name}, {name: name}, {upsert: true})
-                        return author._id
-                    })
-                    obj.authors = await Promise.all(authors)
-                }
-                else if(j.includes('cover')){
-                    obj.imageUrl = await bucketUpload(path.join(dir, i, j))
+                    obj = {...JSON.parse(fo), ...obj}
+                    let iso = obj.birthdate.replace(/(\d{1,2})-(\d{1,2})-(\d{2,4})/, '$3-$2-$1')
+                    obj.birthdate = new Date(iso)
                 }
                 else{
-                    obj.fileUrl =  await bucketUpload(path.join(dir, i, j))
+                    obj.imageUrl =  await bucketUpload(path.join(dir, i, j))
                 }
             }
-            console.log(obj)
-            await Book.create(obj)
+            let author = await Author.findOneAndUpdate({name: obj.name}, obj, {new: true, upsert: true, fields: {_id: 1, books: 1}})
+            let books = await Book.find({authors: author._id}).select({_id: 1})
+            books.forEach((a,b,c) => {return c[b] = a._id})
+            author.books = books
+            await author.save()
+
         }
     }
     catch(e){
@@ -49,4 +47,4 @@ async function booksUpload(dir) {
 
 }
 
-booksUpload(dir)
+authorUpload(dir).then().catch(err => console.log(err))
